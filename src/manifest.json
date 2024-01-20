@@ -1,0 +1,12 @@
+{
+  "name": "KakutyoSamole",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "description": "Nanka asobu yatu",
+  "content_scripts": [
+    {
+      "matches": ["https://app.slack.com/client/T01KA2V6TEC/search"],
+      "js": ["content.js"]
+    }
+  ]
+}
