@@ -1,0 +1,19 @@
+{
+  "name": "KakutyoSamole",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "description": "Nanka asobu yatu",
+  "permissions": ["contextMenus"],
+  "content_scripts": [
+    {
+      "matches": ["https://app.slack.com/*"],
+      "js": ["src/contents.js"]
+    }
+  ],
+  "background": {
+    "matches": ["https://app.slack.com/*"],
+    "service_worker": "background.js"
+  },
+  "action": { "default_popup": "html/popup.html" },
+  "host_permissions": ["https://app.slack.com/*"]
+}
