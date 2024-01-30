@@ -1,56 +1,28 @@
 chrome.runtime.onInstalled.addListener(function (details) {
-  /* コンテキストメニューを作成 */
-  const parent = chrome.contextMenus.create({
-    id: "share",
-    title: "ページを共有",
+  chrome.contextMenus.create({
+    id: "slackOpen",
+    title: "slack開きまくり",
     contexts: ["all"],
   });
 
-  // ページタイトルをコピーするためのメニューアイテムを作成
-  chrome.contextMenus.create({
+  const parent = chrome.contextMenus.create({
+    id: "oya",
+    title: "親",
+    contexts: ["all"],
+  });
+
+  const child = chrome.contextMenus.create({
     parentId: parent,
-    id: "title",
-    title: "ページタイトルをコピー",
+    id: "child",
+    title: "子",
     contexts: ["all"],
   });
 
   // URLをコピーするためのメニューアイテムを作成
   chrome.contextMenus.create({
-    parentId: parent,
-    id: "URL",
-    title: "URL をコピー",
-    contexts: ["all"],
-  });
-
-  // ページタイトルとURLをコピーするためのメニューアイテムを作成
-  chrome.contextMenus.create({
-    parentId: parent,
-    id: "both",
-    title: "ページタイトルと URL をコピー",
-    contexts: ["all"],
-  });
-
-  // Facebookでシェアするためのメニューアイテムを作成
-  chrome.contextMenus.create({
-    parentId: parent,
-    id: "FB",
-    title: "Facebook でシェア",
-    contexts: ["all"],
-  });
-
-  // ツイートするためのメニューアイテムを作成
-  chrome.contextMenus.create({
-    parentId: parent,
-    id: "tweet",
-    title: "ツイート",
-    contexts: ["all"],
-  });
-
-  // LINEで送るためのメニューアイテムを作成
-  chrome.contextMenus.create({
-    parentId: parent,
-    id: "LINE",
-    title: "LINE で送る",
+    parentId: child,
+    id: "g-child",
+    title: "孫",
     contexts: ["all"],
   });
 });
@@ -58,6 +30,13 @@ chrome.runtime.onInstalled.addListener(function (details) {
 /* コンテキストメニューがクリックされた時の処理 */
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   switch (info.menuItemId) {
+    case "slackOpen":
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        function: slack,
+      });
+      break;
+
     case "title":
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
@@ -78,78 +57,18 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         function: both,
       });
       break;
-
-    case "FB":
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        function: FB,
-      });
-      break;
-
-    case "tweet":
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        function: tweet,
-      });
-      break;
-
-    case "LINE":
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        function: LINE,
-      });
-      break;
   }
 });
-function title() {
-  const element = document.createElement("textarea");
-  element.value = document.title;
-  document.body.append(element);
-  element.select();
-  document.execCommand("copy");
-  element.remove();
-}
 
-function URL() {
-  const element = document.createElement("textarea");
-  element.value = location.href;
-  document.body.append(element);
-  element.select();
-  document.execCommand("copy");
-  element.remove();
-}
+function slack() {
+  console.log("🤔");
+  // https://qiita.com/FrogApp/items/cd64894721a0e4723047
 
-function both() {
-  const element = document.createElement("textarea");
-  element.value = document.title + "\n" + location.href;
-  document.body.append(element);
-  element.select();
-  document.execCommand("copy");
-  element.remove();
-}
+  // c-search__expand_ellipsis クラスを持つ全ての要素を取得
+  const elements = document.querySelectorAll(".c-search__expand_ellipsis");
 
-function FB() {
-  window.open(
-    "https://www.facebook.com/share.php?u=" + encodeURIComponent(location.href),
-    "tweetwindow",
-    "width=650, height=470, personalbar=0, toolbar=0, scrollbars=1, sizable=1"
-  );
-}
-function tweet() {
-  window.open(
-    "https://twitter.com/intent/tweet?text=" +
-      encodeURIComponent(document.title) +
-      "%0a&url=" +
-      encodeURIComponent(location.href),
-    "tweetwindow",
-    "width=650, height=470, personalbar=0, toolbar=0, scrollbars=1, sizable=1"
-  );
-}
-function LINE() {
-  window.open(
-    "https://social-plugins.line.me/lineit/share?url=" +
-      encodeURIComponent(location.href),
-    "tweetwindow",
-    "width=650, height=470, personalbar=0, toolbar=0, scrollbars=1, sizable=1"
-  );
+  // 取得した各要素に対してクリックイベントを実行
+  elements.forEach((element) => {
+    element.click();
+  });
 }
