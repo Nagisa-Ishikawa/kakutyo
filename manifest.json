@@ -1,19 +1,14 @@
 {
-  "name": "KakutyoSamole",
+  "name": "タイトルとURLをコピー",
+  "description": "ページのタイトルとURLを簡単にコピーできます。",
   "version": "1.0.0",
   "manifest_version": 3,
-  "description": "Nanka asobu yatu",
-  "permissions": ["contextMenus"],
-  "content_scripts": [
-    {
-      "matches": ["https://app.slack.com/*"],
-      "js": ["src/contents.js"]
-    }
-  ],
-  "background": {
-    "matches": ["https://app.slack.com/*"],
-    "service_worker": "background.js"
+  "permissions": ["activeTab", "scripting", "contextMenus"],
+  "action": {
+    "default_title": "タイトルとURLをコピー",
+    "default_popup": "html/popup.html"
   },
-  "action": { "default_popup": "html/popup.html" },
-  "host_permissions": ["https://app.slack.com/*"]
+  "background": {
+    "service_worker": "background.js"
+  }
 }
